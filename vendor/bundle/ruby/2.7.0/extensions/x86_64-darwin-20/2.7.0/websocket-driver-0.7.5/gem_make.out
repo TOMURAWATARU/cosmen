@@ -1,0 +1,16 @@
+current directory: /Users/tomurawataru/cosmen/vendor/bundle/ruby/2.7.0/gems/websocket-driver-0.7.5/ext/websocket-driver
+/Users/tomurawataru/.rbenv/versions/2.7.4/bin/ruby -I /Users/tomurawataru/.rbenv/versions/2.7.4/lib/ruby/2.7.0 -r ./siteconf20221130-74728-14fm0ru.rb extconf.rb
+creating Makefile
+
+current directory: /Users/tomurawataru/cosmen/vendor/bundle/ruby/2.7.0/gems/websocket-driver-0.7.5/ext/websocket-driver
+make "DESTDIR=" clean
+
+current directory: /Users/tomurawataru/cosmen/vendor/bundle/ruby/2.7.0/gems/websocket-driver-0.7.5/ext/websocket-driver
+make "DESTDIR="
+compiling websocket_mask.c
+linking shared-object websocket_mask.bundle
+ld: warning: -undefined dynamic_lookup may not work with chained fixups
+
+current directory: /Users/tomurawataru/cosmen/vendor/bundle/ruby/2.7.0/gems/websocket-driver-0.7.5/ext/websocket-driver
+make "DESTDIR=" install
+/usr/bin/install -c -m 0755 websocket_mask.bundle ./.gem.20221130-74728-1fc049r
