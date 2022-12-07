@@ -15,6 +15,13 @@ def login_remember(user)
                                         remember_me: '1' } }
 end
 
+def login_for_system(user)
+  visit login_path
+  fill_in "user_email",    with: user.email
+  fill_in "user_password", with: user.password
+  click_button "ログイン"
+end
+
 def current_user
   if (user_id = session[:user_id])
     User.find_by(id: user_id)
