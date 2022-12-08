@@ -8,6 +8,7 @@ ja:
           has_many: "%{record}が存在しているので削除できません"
     models:
       user: ユーザー
+      cosme: コスメ
     attributes:
       user:
         id: ID
@@ -19,6 +20,15 @@ ja:
         sex: 性別
         created_at: 登録日時
         updated_at: 更新日時
+      cosme:
+        id: ID
+        name: コスメ名
+        description: 説明
+        tips: コツ・ポイント
+        reference: 参照用URL
+        popularity: 人気度
+        user_id: 作成者のID
+        cosme_memo: コスメメモ
   date:
     abbr_day_names:
     - 日
