@@ -1,8 +1,7 @@
 FactoryBot.define do
   factory :cosme do
-    name { Faker::JapaneseMedia::OnePiece }
-    description { "男性特有の肌悩みを速攻カバー、男性用BBクリーム。
-      特に毛穴・ニキビ跡にしっかりカバー" }
+    name { Faker::JapaneseMedia::OnePiece.character }
+    description { "男性特有の肌悩みを速攻カバー、男性用BBクリーム。" }
     tips { "ナチュラル風にするのが今っぽい！" }
     reference { "https://brand.finetoday.com/jp/uno/products/face_color_creator_cover_lv5/" }
     popularity { 5 }

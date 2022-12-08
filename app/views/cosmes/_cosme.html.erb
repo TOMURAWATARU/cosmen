@@ -1,0 +1,10 @@
+<li id="cosme-<%= cosme.id %>">
+  <%= link_to gravatar_for(cosme.user, size: 50), cosme.user %>
+  <span class="name"><%= link_to cosme.name, "#" %></span>
+  <span class="description"><%= cosme.description %></span><br>
+  <span class="popularity">人気度：<%= cosme.popularity %></span><br>
+  <span class="reference"><%= link_to "詳細", cosme.reference, target: :_blank %></span>
+  <span class="timestamp">
+    <%= time_ago_in_words(cosme.created_at) %>前に投稿
+  </span>
+</li>

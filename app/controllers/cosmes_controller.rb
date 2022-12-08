@@ -1,0 +1,2 @@
+class CosmesController < ApplicationController
+end

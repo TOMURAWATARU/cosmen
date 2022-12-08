@@ -1,5 +1,12 @@
-<center>
-  <h1>めんこすへようこそ！</h1>
-  <h2>メンズコスメのお悩み共有しませんか？</h2>
-  <p>これさえあればもう迷わない！</p>
-</center>
+<% if logged_in? %>
+  <div class="container">
+    <h3>みんなの投稿 (<%= @feed_items.count %>)</h3>
+    <%= render 'shared/feed' %>
+  </div>
+<% else %>
+  <div style="text-align: center">
+    <h1>めんこすへようこそ！</h1>
+    <h2>メンズコスメのお悩み共有しませんか？</h2>
+    <p>これさえあればもう迷わない！</p>
+  </div>
+<% end %>
