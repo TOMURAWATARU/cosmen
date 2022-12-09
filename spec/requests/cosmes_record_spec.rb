@@ -5,10 +5,36 @@ RSpec.describe "コスメの登録", type: :request do
   let!(:cosme) { create(:cosme, user: user) }
 
   context "ログインしているユーザーの場合" do
-    it "レスポンスが正常に表示されること" do
+    before do
       login_for_request(user)
       get new_cosme_path
+    end
+
+    it "レスポンスが正常に表示されること" do
       expect(response).to have_http_status "200"
+      expect(response).to render_template('cosmes/new')
+    end
+
+    it "有効なコスメデータで登録できること" do
+      expect {
+        post cosmes_path, params: { cosme: { name: "ファンデーション",
+                                             description: "自然な仕上がりになるものです",
+                                             tips: "薄く馴染ませるのがポイント",
+                                             reference: "https://brand.finetoday.com/jp/uno/products/face_color_creator/",
+                                             popularity: 5 } }
+      }.to change(Cosme, :count).by(1)
+      follow_redirect!
+      expect(response).to render_template('static_pages/home')
+    end
+
+    it "無効なコスメデータでは登録できないこと" do
+      expect {
+        post cosmes_path, params: { cosme: { name: "",
+                                             description: "自然な仕上がりになるものです",
+                                             tips: "薄く馴染ませるのがポイント",
+                                             reference: "https://brand.finetoday.com/jp/uno/products/face_color_creator/",
+                                             popularity: 5 } }
+      }.not_to change(Cosme, :count)
       expect(response).to render_template('cosmes/new')
     end
   end

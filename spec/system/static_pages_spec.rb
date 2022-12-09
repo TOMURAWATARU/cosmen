@@ -47,7 +47,7 @@ RSpec.describe "StaticPages", type: :system do
     context "コスメフィード", js: true do
       let!(:user) { create(:user) }
       let!(:cosme) { create(:cosme, user: user) }
-      
+
       before do
         login_for_system(user)
       end
