@@ -47,6 +47,10 @@ RSpec.describe "StaticPages", type: :system do
     context "コスメフィード", js: true do
       let!(:user) { create(:user) }
       let!(:cosme) { create(:cosme, user: user) }
+      
+      before do
+        login_for_system(user)
+      end
 
       it "コスメのぺージネーションが表示されること" do
         login_for_system(user)
@@ -57,6 +61,11 @@ RSpec.describe "StaticPages", type: :system do
         Cosme.take(5).each do |d|
           expect(page).to have_link d.name
         end
+      end
+
+      it "「新しいコスメを登録する」リンクが表示されること" do
+        visit root_path
+        expect(page).to have_link "新しいコスメを登録する", href: new_cosme_path
       end
     end
   end
