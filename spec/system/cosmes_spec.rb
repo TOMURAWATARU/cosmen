@@ -52,6 +52,52 @@ RSpec.describe "Cosmes", type: :system do
     end
   end
 
+  describe "コスメ編集ページ" do
+    before do
+      login_for_system(user)
+      visit cosme_path(cosme)
+      click_link "編集"
+    end
+
+    context "ページレイアウト" do
+      it "正しいタイトルが表示されること" do
+        expect(page).to have_title full_title('コスメ情報の編集')
+      end
+
+      it "入力部分に適切なラベルが表示されること" do
+        expect(page).to have_content 'コスメ名'
+        expect(page).to have_content '説明'
+        expect(page).to have_content 'コツ・ポイント'
+        expect(page).to have_content '参照用URL'
+        expect(page).to have_content '人気度 [1~5]'
+      end
+    end
+
+    context "コスメの更新処理" do
+      it "有効な更新" do
+        fill_in "コスメ名", with: "編集：フェイスカラークリエイター"
+        fill_in "説明", with: "編集：自然な仕上がりになるものです"
+        fill_in "コツ・ポイント", with: "編集：薄く馴染ませるのがポイント"
+        fill_in "参照用URL", with: "henshu-https://brand.finetoday.com/jp/uno/products/face_color_creator/"
+        fill_in "人気度", with: 1
+        click_button "更新する"
+        expect(page).to have_content "コスメ情報が更新されました！"
+        expect(cosme.reload.name).to eq "編集：フェイスカラークリエイター"
+        expect(cosme.reload.description).to eq "編集：自然な仕上がりになるものです"
+        expect(cosme.reload.tips).to eq "編集：薄く馴染ませるのがポイント"
+        expect(cosme.reload.reference).to eq "henshu-https://brand.finetoday.com/jp/uno/products/face_color_creator/"
+        expect(cosme.reload.popularity).to eq 1
+      end
+
+      it "無効な更新" do
+        fill_in "コスメ名", with: ""
+        click_button "更新する"
+        expect(page).to have_content 'コスメ名を入力してください'
+        expect(cosme.reload.name).not_to eq ""
+      end
+    end
+  end
+
   describe "コスメ詳細ページ" do
     context "ページレイアウト" do
       before do

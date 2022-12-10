@@ -2,6 +2,11 @@
 <div class="container">
   <div class="row">
     <h2 class="cosme-name"><%= @cosme.name %></h2>
+    <div class="change-cosme">
+      <% if current_user == @cosme.user %>
+        <%= link_to "編集", edit_cosme_path(@cosme), class: 'edit-cosme' %>　
+      <% end %>
+    </div>
     <h4 class="cosme-description">説明：<%= @cosme.description %></h4>
     <h4 class="cosme-reference">参照用URL：<%= link_to "#{@cosme.reference}", @cosme.reference, target: "_blank" %></h4>
     <div class="tips">
