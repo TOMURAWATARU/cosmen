@@ -2,6 +2,7 @@ require 'rails_helper'
 
 RSpec.describe "Cosmes", type: :system do
   let!(:user) { create(:user) }
+  let!(:cosme) { create(:cosme, user: user) }
 
   describe "コスメ登録ページ" do
     before do
@@ -47,6 +48,27 @@ RSpec.describe "Cosmes", type: :system do
         fill_in "人気度", with: 5
         click_button "登録する"
         expect(page).to have_content "コスメ名を入力してください"
+      end
+    end
+  end
+
+  describe "コスメ詳細ページ" do
+    context "ページレイアウト" do
+      before do
+        login_for_system(user)
+        visit cosme_path(cosme)
+      end
+
+      it "正しいタイトルが表示されること" do
+        expect(page).to have_title full_title("#{cosme.name}")
+      end
+
+      it "料理情報が表示されること" do
+        expect(page).to have_content cosme.name
+        expect(page).to have_content cosme.description
+        expect(page).to have_content cosme.tips
+        expect(page).to have_content cosme.reference
+        expect(page).to have_content cosme.popularity
       end
     end
   end

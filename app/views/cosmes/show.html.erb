@@ -1,0 +1,17 @@
+<% provide(:title, "#{@cosme.name}") %>
+<div class="container">
+  <div class="row">
+    <h2 class="cosme-name"><%= @cosme.name %></h2>
+    <h4 class="cosme-description">説明：<%= @cosme.description %></h4>
+    <h4 class="cosme-reference">参照用URL：<%= link_to "#{@cosme.reference}", @cosme.reference, target: "_blank" %></h4>
+    <div class="tips">
+      <h5 class="title-tips">コツ・ポイント</h5>
+      <h5><%= @cosme.tips %></h5>
+    </div>
+    <div class="show-cosme-other-info">
+      <div class="cosme-info">
+        <h5>人気度：</h5><h4><%= @cosme.popularity %></h4>
+      </div>
+    </div>
+  </div>
+</div>

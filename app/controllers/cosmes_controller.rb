@@ -5,11 +5,15 @@ class CosmesController < ApplicationController
     @cosme = Cosme.new
   end
 
+  def show
+    @cosme = Cosme.find(params[:id])
+  end
+
   def create
     @cosme = current_user.cosmes.build(cosme_params)
     if @cosme.save
       flash[:success] = "コスメが登録されました！"
-      redirect_to root_url
+      redirect_to cosme_path(@cosme)
     else
       render 'cosmes/new'
     end
@@ -18,7 +22,7 @@ class CosmesController < ApplicationController
   private
 
     def cosme_params
-      params.require(:cosme).permit(:name, :discription, :tips,
+      params.require(:cosme).permit(:name, :description, :tips,
                                     :reference, :popularity, :cosme_memo)
     end
 end

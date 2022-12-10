@@ -215,3 +215,62 @@ span.picture {
 .input-unneed {
   font-size: 13px;
 }
+
+（省略）
+
+//// コスメ個別ページ ////
+.cosme-user-name {
+  display: inline-block;
+}
+
+h2.cosme-name {
+  font-size: 30px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  display: inline-block;
+}
+
+.cosme-description {
+  margin-top: 30px;
+}
+
+.cosme-reference {
+  margin-top: 30px;
+}
+
+.tips {
+  margin-top: 30px;
+  margin-bottom: 30px;
+  h5 {
+    font-size: 17px;
+  }
+}
+
+.title-tips {
+  font-size: 17px;
+  font-weight: bold;
+  margin-top: 10px;
+  margin-bottom: 0;
+}
+
+.show-cosme-other-info {
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+
+.cosme-other-info {
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+.cosme-info {
+  h5 {
+    font-size: 16px;
+    display: inline-block;
+  }
+  h4 {
+    font-size: 20px;
+    display: inline-block;
+  }
+}
