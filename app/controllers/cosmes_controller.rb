@@ -50,7 +50,7 @@ class CosmesController < ApplicationController
 
     def cosme_params
       params.require(:cosme).permit(:name, :description, :tips,
-                                    :reference, :popularity, :cosme_memo)
+                                    :reference, :popularity, :cosme_memo, :picture)
     end
 
     def correct_user
