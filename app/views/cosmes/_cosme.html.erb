@@ -1,6 +1,9 @@
 <li id="cosme-<%= cosme.id %>">
   <%= link_to gravatar_for(cosme.user, size: 50), cosme.user %>
   <span class="name"><%= link_to cosme.name, cosme_path(cosme) %></span>
+  <span>
+    <%= link_to((image_tag cosme.picture.thumb200.url), cosme_path(cosme.id), class: 'cosme-picture') if cosme.picture.url.present? %>
+  </span>
   <span class="description"><%= cosme.description %></span><br>
   <span class="popularity">人気度：<%= cosme.popularity %></span><br>
   <span class="reference"><%= link_to "詳細", cosme.reference, target: :_blank %></span>

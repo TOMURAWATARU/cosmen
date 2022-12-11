@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe "Cosmes", type: :system do
   let!(:user) { create(:user) }
-  let!(:cosme) { create(:cosme, user: user) }
+  let!(:cosme) { create(:cosme, :picture, user: user) }
 
   describe "コスメ登録ページ" do
     before do
@@ -31,13 +31,20 @@ RSpec.describe "Cosmes", type: :system do
 
     context "コスメ登録処理" do
       it "有効な情報でコスメ登録を行うとコスメ登録成功のフラッシュが表示されること" do
-        fill_in "コスメ名", with: "ファンデーション"
+        fill_in "コスメ名", with: "フェイスカラークリエイター"
         fill_in "説明", with: "自然な仕上がりになるものです"
         fill_in "コツ・ポイント", with: "薄く馴染ませるのがポイント"
         fill_in "参照用URL", with: "https://brand.finetoday.com/jp/uno/products/face_color_creator/"
         fill_in "人気度", with: 5
+        attach_file "cosme[picture]", "#{Rails.root}/spec/fixtures/test_cosme.jpg"
         click_button "登録する"
         expect(page).to have_content "コスメが登録されました！"
+      end
+
+      it "画像無しで登録すると、デフォルト画像が割り当てられること" do
+        fill_in "コスメ名", with: "フェイスカラークリエイター"
+        click_button "登録する"
+        expect(page).to have_link(href: cosme_path(Cosme.first))
       end
 
       it "無効な情報でコスメ登録を行うとコスメ登録失敗のフラッシュが表示されること" do
@@ -80,6 +87,7 @@ RSpec.describe "Cosmes", type: :system do
         fill_in "コツ・ポイント", with: "編集：薄く馴染ませるのがポイント"
         fill_in "参照用URL", with: "henshu-https://brand.finetoday.com/jp/uno/products/face_color_creator/"
         fill_in "人気度", with: 1
+        attach_file "cosme[picture]", "#{Rails.root}/spec/fixtures/test_cosme2.jpg"
         click_button "更新する"
         expect(page).to have_content "コスメ情報が更新されました！"
         expect(cosme.reload.name).to eq "編集：フェイスカラークリエイター"
@@ -87,6 +95,7 @@ RSpec.describe "Cosmes", type: :system do
         expect(cosme.reload.tips).to eq "編集：薄く馴染ませるのがポイント"
         expect(cosme.reload.reference).to eq "henshu-https://brand.finetoday.com/jp/uno/products/face_color_creator/"
         expect(cosme.reload.popularity).to eq 1
+        expect(cosme.reload.picture.url).to include "test_cosme2.jpg"
       end
 
       it "無効な更新" do
@@ -123,6 +132,7 @@ RSpec.describe "Cosmes", type: :system do
         expect(page).to have_content cosme.tips
         expect(page).to have_content cosme.reference
         expect(page).to have_content cosme.popularity
+        expect(page).to have_link nil, href: cosme_path(cosme), class: 'cosme-picture'
       end
     end
 

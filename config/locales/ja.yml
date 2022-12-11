@@ -29,6 +29,7 @@ ja:
         popularity: 人気度
         user_id: 作成者のID
         cosme_memo: コスメメモ
+        picture: コスメの写真
   date:
     abbr_day_names:
     - 日

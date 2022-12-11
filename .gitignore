@@ -27,3 +27,6 @@
 /config/master.key
 
 /vendor
+
+# Ignore unnecessary pictures
+/public/uploads/*

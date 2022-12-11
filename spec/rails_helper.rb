@@ -21,6 +21,7 @@ require 'rspec/rails'
 # require only the support files necessary.
 #
 require 'capybara/rspec'
+require 'carrierwave/test/matchers'
 
 Dir[Rails.root.join('spec', 'support', '**', '*.rb')].each { |f| require f }
 

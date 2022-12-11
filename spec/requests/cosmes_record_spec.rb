@@ -2,7 +2,10 @@ require "rails_helper"
 
 RSpec.describe "コスメの登録", type: :request do
   let!(:user) { create(:user) }
+  let!(:other_user) { create(:user) }
   let!(:cosme) { create(:cosme, user: user) }
+  let(:picture_path) { File.join(Rails.root, 'spec/fixtures/test_cosme.jpg') }
+  let(:picture) { Rack::Test::UploadedFile.new(picture_path) }
 
   context "ログインしているユーザーの場合" do
     before do
@@ -22,7 +25,7 @@ RSpec.describe "コスメの登録", type: :request do
                                              description: "自然な仕上がりになるものです",
                                              tips: "薄く馴染ませるのがポイント",
                                              reference: "https://brand.finetoday.com/jp/uno/products/face_color_creator/",
-                                             popularity: 5 } }
+                                             popularity: 5} }
       }.to change(Cosme, :count).by(1)
       follow_redirect!
       expect(response).to render_template('cosmes/show')
@@ -34,7 +37,7 @@ RSpec.describe "コスメの登録", type: :request do
                                              description: "自然な仕上がりになるものです",
                                              tips: "薄く馴染ませるのがポイント",
                                              reference: "https://brand.finetoday.com/jp/uno/products/face_color_creator/",
-                                             popularity: 5 } }
+                                             popularity: 5} }
       }.not_to change(Cosme, :count)
       expect(response).to render_template('cosmes/new')
     end
