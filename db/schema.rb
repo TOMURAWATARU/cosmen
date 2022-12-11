@@ -10,10 +10,24 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_12_07_101637) do
+ActiveRecord::Schema.define(version: 2022_12_08_145057) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "cosmes", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.text "tips"
+    t.text "reference"
+    t.integer "popularity"
+    t.text "cosme_memo"
+    t.bigint "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "created_at"], name: "index_cosmes_on_user_id_and_created_at"
+    t.index ["user_id"], name: "index_cosmes_on_user_id"
+  end
 
   create_table "users", force: :cascade do |t|
     t.string "name"
@@ -28,4 +42,5 @@ ActiveRecord::Schema.define(version: 2022_12_07_101637) do
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
+  add_foreign_key "cosmes", "users"
 end

@@ -14,6 +14,38 @@ RSpec.describe "StaticPages", type: :system do
       it "正しいタイトルが表示されることを確認" do
         expect(page).to have_title full_title
       end
+
+      context "コスメフィード", js: true do
+        let!(:user) { create(:user) }
+        let!(:cosme) { create(:cosme, user: user) }
+
+        before do
+          login_for_system(user)
+        end
+
+        it "コスメのぺージネーションが表示されること" do
+          login_for_system(user)
+          create_list(:cosme, 5, user: user)
+          visit root_path
+          expect(page).to have_content "みんなの投稿 (#{user.cosmes.count})"
+          expect(page).to have_css "div.pagination"
+          Cosme.take(5).each do |d|
+            expect(page).to have_link d.name
+          end
+        end
+
+        it "「新しいコスメを登録する」リンクが表示されること" do
+          visit root_path
+          expect(page).to have_link "新しいコスメを登録する", href: new_cosme_path
+        end
+
+        it "コスメを削除後、削除成功のフラッシュが表示されること" do
+          visit root_path
+          click_on '削除'
+          page.driver.browser.switch_to.alert.accept
+          expect(page).to have_content 'コスメが削除されました'
+        end
+      end
     end
   end
 
