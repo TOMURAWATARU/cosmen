@@ -34,6 +34,18 @@ class CosmesController < ApplicationController
     end
   end
 
+  def destroy
+    @cosme = Cosme.find(params[:id])
+    if current_user.admin? || current_user?(@cosme.user)
+      @cosme.destroy
+      flash[:success] = "コスメが削除されました"
+      redirect_to request.referrer == user_url(@cosme.user) ? user_url(@cosme.user) : root_url
+    else
+      flash[:danger] = "他人のコスメは削除できません"
+      redirect_to root_url
+    end
+  end
+
   private
 
     def cosme_params

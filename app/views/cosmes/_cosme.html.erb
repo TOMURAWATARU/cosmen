@@ -7,4 +7,8 @@
   <span class="timestamp">
     <%= time_ago_in_words(cosme.created_at) %>前に投稿
   </span>
+  <% if current_user.admin? || (current_user == cosme.user) %>
+    <%= link_to "削除", cosme_path(cosme), method: :delete,
+                       data: { confirm: "本当に削除しますか？" } %>
+  <% end %>
 </li>

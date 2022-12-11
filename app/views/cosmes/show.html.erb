@@ -4,7 +4,11 @@
     <h2 class="cosme-name"><%= @cosme.name %></h2>
     <div class="change-cosme">
       <% if current_user == @cosme.user %>
-        <%= link_to "編集", edit_cosme_path(@cosme), class: 'edit-cosme' %>　
+        <%= link_to "編集", edit_cosme_path(@cosme), class: 'edit-cosme' %>
+      <% end %>
+      <% if current_user.admin? || (current_user == @cosme.user) %>
+        <%= link_to "削除", cosme_path(@cosme), method: :delete, class: 'delete-cosme',
+                                      data: { confirm: "本当に削除しますか？" } %>
       <% end %>
     </div>
     <h4 class="cosme-description">説明：<%= @cosme.description %></h4>

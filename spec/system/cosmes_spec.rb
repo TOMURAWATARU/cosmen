@@ -96,6 +96,14 @@ RSpec.describe "Cosmes", type: :system do
         expect(cosme.reload.name).not_to eq ""
       end
     end
+
+    context "コスメの削除処理", js: true do
+      it "削除成功のフラッシュが表示されること" do
+        click_on '削除'
+        page.driver.browser.switch_to.alert.accept
+        expect(page).to have_content 'コスメが削除されました'
+      end
+    end
   end
 
   describe "コスメ詳細ページ" do
@@ -109,12 +117,24 @@ RSpec.describe "Cosmes", type: :system do
         expect(page).to have_title full_title("#{cosme.name}")
       end
 
-      it "料理情報が表示されること" do
+      it "コスメ情報が表示されること" do
         expect(page).to have_content cosme.name
         expect(page).to have_content cosme.description
         expect(page).to have_content cosme.tips
         expect(page).to have_content cosme.reference
         expect(page).to have_content cosme.popularity
+      end
+    end
+
+    context "コスメの削除", js: true do
+      it "削除成功のフラッシュが表示されること" do
+        login_for_system(user)
+        visit cosme_path(cosme)
+        within find('.change-cosme') do
+          click_on '削除'
+        end
+        page.driver.browser.switch_to.alert.accept
+        expect(page).to have_content 'コスメが削除されました'
       end
     end
   end

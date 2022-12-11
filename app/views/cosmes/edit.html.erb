@@ -25,6 +25,9 @@
           <%= f.text_field :popularity, class: 'form-control', id: 'cosme_popularity' %>
         </div>
         <%= f.submit "更新する", class: "btn btn-primary" %>
+        <p></p>
+        <%= link_to "コスメを削除する", cosme_path(@cosme), method: :delete,
+                             data: { confirm: "本当にこのコスメを削除してよろしいですか？" } %>
       <% end %>
     </div>
   </div>
