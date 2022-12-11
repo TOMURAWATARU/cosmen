@@ -25,7 +25,7 @@ RSpec.describe "コスメの登録", type: :request do
                                              description: "自然な仕上がりになるものです",
                                              tips: "薄く馴染ませるのがポイント",
                                              reference: "https://brand.finetoday.com/jp/uno/products/face_color_creator/",
-                                             popularity: 5} }
+                                             popularity: 5 } }
       }.to change(Cosme, :count).by(1)
       follow_redirect!
       expect(response).to render_template('cosmes/show')
@@ -37,7 +37,7 @@ RSpec.describe "コスメの登録", type: :request do
                                              description: "自然な仕上がりになるものです",
                                              tips: "薄く馴染ませるのがポイント",
                                              reference: "https://brand.finetoday.com/jp/uno/products/face_color_creator/",
-                                             popularity: 5} }
+                                             popularity: 5 } }
       }.not_to change(Cosme, :count)
       expect(response).to render_template('cosmes/new')
     end
