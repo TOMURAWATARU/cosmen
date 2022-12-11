@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :cosme do
-    name { Faker::JapaneseMedia::OnePiece.character }
+    name { Faker::Food.dish }
     description { "男性特有の肌悩みを速攻カバー、男性用BBクリーム。" }
     tips { "ナチュラル風にするのが今っぽい！" }
     reference { "https://brand.finetoday.com/jp/uno/products/face_color_creator_cover_lv5/" }
@@ -19,5 +19,9 @@ FactoryBot.define do
 
   trait :one_month_ago do
     created_at { 1.month.ago }
+  end
+
+  trait :picture do
+    picture { Rack::Test::UploadedFile.new(File.join(Rails.root, 'spec/fixtures/test_cosme.jpg')) }
   end
 end

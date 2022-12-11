@@ -282,3 +282,9 @@ h2.cosme-name {
 .edit-cosme .delete-cosme {
   font-size: 15px;
 }
+
+.cosme-picture img {
+  max-width: 100%;
+  height: auto;
+  box-sizing: border-box;
+}

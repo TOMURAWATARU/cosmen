@@ -3,7 +3,7 @@
   <div class="row">
      <div class="col-md-4">
       <span class="picture">
-        <%= link_to((image_tag @cosme.picture.url), cosme_path(@cosme.id), class: 'cosme-picture') if @cosme.picture.url.present? %>
+        <%= link_to((image_tag @cosme.picture.thumb400.url), cosme_path(@cosme.id), class: 'cosme-picture') if @cosme.picture.url.present? %>
       </span>
     </div>
     <div class="col-md-8">
