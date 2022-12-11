@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe "Relationships", type: :request do
   let(:user) { create(:user) }
   let(:other_user) { create(:user) }
-  
+
   context "ログインしている場合" do
     before do
       login_for_request(user)
@@ -14,13 +14,13 @@ RSpec.describe "Relationships", type: :request do
         post relationships_path, params: { followed_id: other_user.id }
       }.to change(user.following, :count).by(1)
     end
-  
+
     it "ユーザーのAjaxによるフォローができること" do
       expect {
         post relationships_path, xhr: true, params: { followed_id: other_user.id }
       }.to change(user.following, :count).by(1)
     end
-  
+
     it "ユーザーのアンフォローができること" do
       user.follow(other_user)
       relationship = user.active_relationships.find_by(followed_id: other_user.id)
@@ -28,7 +28,7 @@ RSpec.describe "Relationships", type: :request do
         delete relationship_path(relationship)
       }.to change(user.following, :count).by(-1)
     end
-  
+
     it "ユーザーのAjaxによるアンフォローができること" do
       user.follow(other_user)
       relationship = user.active_relationships.find_by(followed_id: other_user.id)
@@ -45,7 +45,7 @@ RSpec.describe "Relationships", type: :request do
       }.not_to change(Relationship, :count)
       expect(response).to redirect_to login_path
     end
-  
+
     it "destroyアクションは実行できず、ログインページへリダイレクトすること" do
       expect {
         delete relationship_path(user)
