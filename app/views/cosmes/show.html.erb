@@ -1,32 +1,38 @@
 <% provide(:title, "#{@cosme.name}") %>
+<% @comments  = @cosme.feed_comment(@cosme.id) %>
 <div class="container">
   <div class="row">
-     <div class="col-md-4">
+    <div class="col-md-4">
       <span class="picture">
         <%= link_to((image_tag @cosme.picture.thumb400.url), cosme_path(@cosme.id), class: 'cosme-picture') if @cosme.picture.url.present? %>
       </span>
       <%= render 'users/favorite_form' %>
     </div>
     <div class="col-md-8">
-    <h2 class="cosme-name"><%= @cosme.name %></h2>
-    <div class="change-cosme">
-      <% if current_user == @cosme.user %>
-        <%= link_to "編集", edit_cosme_path(@cosme), class: 'edit-cosme' %>
-      <% end %>
-      <% if current_user.admin? || (current_user == @cosme.user) %>
-        <%= link_to "削除", cosme_path(@cosme), method: :delete, class: 'delete-cosme',
-                                      data: { confirm: "本当に削除しますか？" } %>
-      <% end %>
-    </div>
-    <h4 class="cosme-description">説明：<%= @cosme.description %></h4>
-    <h4 class="cosme-reference">参照用URL：<%= link_to "#{@cosme.reference}", @cosme.reference, target: "_blank" %></h4>
-    <div class="tips">
-      <h5 class="title-tips">コツ・ポイント</h5>
-      <h5><%= @cosme.tips %></h5>
-    </div>
-    <div class="show-cosme-other-info">
-      <div class="cosme-info">
-        <h5>人気度：</h5><h4><%= @cosme.popularity %></h4>
+      <h2 class="cosme-name"><%= @cosme.name %></h2>
+      <div class="change-cosme">
+        <% if current_user == @cosme.user %>
+          <%= link_to "編集", edit_cosme_path(@cosme), class: 'edit-cosme' %>
+        <% end %>
+        <% if current_user.admin? || (current_user == @cosme.user) %>
+          <%= link_to "削除", cosme_path(@cosme), method: :delete, class: 'delete-cosme',
+                                         data: { confirm: "本当に削除しますか？" } %>
+        <% end %>
+      </div>
+      <h4 class="cosme-description">説明：<%= @cosme.description %></h4>
+      <h4 class="cosme-reference">参照用URL：<%= link_to "#{@cosme.reference}", @cosme.reference, target: "_blank" %></h4>
+      <div class="tips">
+        <h5 class="title-tips">コツ・ポイント</h5>
+        <h5><%= @cosme.tips %></h5>
+      </div>
+      <div class="show-cosme-other-info">
+        <div class="cosme-info">
+          <h5>人気度：</h5><h4><%= @cosme.popularity %></h4>
+        </div>
+      </div>
+      <div class="comment">
+        <%= render "comments/feed_comments" %>
+        <%= render "comments/new" %>
       </div>
     </div>
   </div>

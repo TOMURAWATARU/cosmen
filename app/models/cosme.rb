@@ -17,6 +17,11 @@ class Cosme < ApplicationRecord
             allow_nil: true
   validate  :picture_size
 
+  # コスメに付属するコメントのフィードを作成
+  def feed_comment(cosme_id)
+    Comment.where("cosme_id = ?", cosme_id)
+  end
+
   private
 
     def picture_size
