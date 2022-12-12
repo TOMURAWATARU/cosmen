@@ -174,5 +174,19 @@ RSpec.describe "Users", type: :system do
         expect(page).to have_button 'フォローする'
       end
     end
+
+    context "お気に入り登録/解除" do
+      before do
+        login_for_system(user)
+      end
+
+      it "料理のお気に入り登録/解除ができること" do
+        expect(user.favorite?(cosme)).to be_falsey
+        user.favorite(cosme)
+        expect(user.favorite?(cosme)).to be_truthy
+        user.unfavorite(cosme)
+        expect(user.favorite?(cosme)).to be_falsey
+      end
+    end
   end
 end

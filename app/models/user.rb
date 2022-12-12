@@ -71,5 +71,20 @@ class User < ApplicationRecord
     followers.include?(other_user)
   end
 
+   # コスメをお気に入りに登録する
+   def favorite(cosme)
+    Favorite.create!(user_id: id, cosme_id: cosme.id)
+  end
+
+  # コスメをお気に入り解除する
+  def unfavorite(cosme)
+    Favorite.find_by(user_id: id, cosme_id: cosme.id).destroy
+  end
+
+  # 現在のユーザーがお気に入り登録してたらtrueを返す
+  def favorite?(cosme)
+    !Favorite.find_by(user_id: id, cosme_id: cosme.id).nil?
+  end
+
   private
 end
