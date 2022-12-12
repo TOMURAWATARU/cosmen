@@ -5,6 +5,7 @@ RSpec.describe "Users", type: :system do
   let!(:admin_user) { create(:user, :admin) }
   let!(:other_user) { create(:user) }
   let!(:cosme) { create(:cosme, user: user) }
+  let!(:other_cosme) { create(:cosme, user: other_user) }
 
   describe "ユーザー一覧ページ" do
     context "管理者ユーザーの場合" do
@@ -213,7 +214,7 @@ RSpec.describe "Users", type: :system do
         expect(link[:href]).to include "/favorites/#{cosme.id}/create"
       end
 
-      it "料理個別ページからお気に入り登録/解除ができること", js: true do
+      it "コスメ個別ページからお気に入り登録/解除ができること", js: true do
         visit cosme_path(cosme)
         link = find('.like')
         expect(link[:href]).to include "/favorites/#{cosme.id}/create"
@@ -223,6 +224,27 @@ RSpec.describe "Users", type: :system do
         link.click
         link = find('.like')
         expect(link[:href]).to include "/favorites/#{cosme.id}/create"
+      end
+
+      it "お気に入り一覧ページが期待通り表示されること" do
+        visit favorites_path
+        expect(page).not_to have_css ".favorite-cosme"
+        user.favorite(cosme)
+        user.favorite(other_cosme)
+        visit favorites_path
+        expect(page).to have_css ".favorite-cosme", count: 2
+        expect(page).to have_content cosme.name
+        expect(page).to have_content cosme.description
+        expect(page).to have_content "cosmed by #{user.name}"
+        expect(page).to have_link user.name, href: user_path(user)
+        expect(page).to have_content other_cosme.name
+        expect(page).to have_content other_cosme.description
+        expect(page).to have_content "cosmed by #{other_user.name}"
+        expect(page).to have_link other_user.name, href: user_path(other_user)
+        user.unfavorite(other_cosme)
+        visit favorites_path
+        expect(page).to have_css ".favorite-cosme", count: 1
+        expect(page).to have_content cosme.name
       end
     end
   end
