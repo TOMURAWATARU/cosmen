@@ -11,10 +11,10 @@ class FavoritesController < ApplicationController
     end
     # 自分以外のユーザーからお気に入り登録があったときのみ通知を作成
     if @user != current_user
-        @user.notifications.create(cosme_id: @cosme.id, variety: 1,
-                                   from_user_id: current_user.id) # お気に入り登録は通知種別1
-        @user.update_attribute(:notification, true)
-      end
+       @user.notifications.create(cosme_id: @cosme.id, variety: 1,
+                                  from_user_id: current_user.id) # お気に入り登録は通知種別1
+       @user.update_attribute(:notification, true)
+    end
   end
 
   def destroy
