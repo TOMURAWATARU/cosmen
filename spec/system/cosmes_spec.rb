@@ -2,7 +2,9 @@ require 'rails_helper'
 
 RSpec.describe "Cosmes", type: :system do
   let!(:user) { create(:user) }
+  let!(:other_user) { create(:user) }
   let!(:cosme) { create(:cosme, :picture, user: user) }
+  let!(:comment) { create(:comment, user_id: user.id, cosme: cosme) }
 
   describe "コスメ登録ページ" do
     before do
@@ -145,6 +147,33 @@ RSpec.describe "Cosmes", type: :system do
         end
         page.driver.browser.switch_to.alert.accept
         expect(page).to have_content 'コスメが削除されました'
+      end
+    end
+
+    context "コメントの登録＆削除" do
+      it "自分のコスメに対するコメントの登録＆削除が正常に完了すること" do
+        login_for_system(user)
+        visit cosme_path(cosme)
+        fill_in "comment_content", with: "今日のメイクは大成功"
+        click_button "コメント"
+        within find("#comment-#{Comment.last.id}") do
+          expect(page).to have_selector 'span', text: user.name
+          expect(page).to have_selector 'span', text: '今日のメイクは大成功'
+        end
+        expect(page).to have_content "コメントを追加しました！"
+        click_link "削除", href: comment_path(Comment.last)
+        expect(page).not_to have_selector 'span', text: '今日のメイクは大成功'
+        expect(page).to have_content "コメントを削除しました"
+      end
+
+      it "別ユーザーのコスメのコメントには削除リンクが無いこと" do
+        login_for_system(other_user)
+        visit cosme_path(cosme)
+        within find("#comment-#{comment.id}") do
+          expect(page).to have_selector 'span', text: user.name
+          expect(page).to have_selector 'span', text: comment.content
+          expect(page).not_to have_link '削除', href: cosme_path(cosme)
+        end
       end
     end
   end

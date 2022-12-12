@@ -51,7 +51,7 @@ gem 'carrierwave', '1.2.2'
 gem "mini_magick", '>= 4.9.4'
 
 group :production do
- gem 'fog', '1.42'  
+ gem 'fog', '1.42'
 end
 
 group :development, :test do
