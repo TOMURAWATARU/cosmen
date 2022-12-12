@@ -7,6 +7,13 @@ class CommentsController < ApplicationController
     @comment = @cosme.comments.build(user_id: current_user.id, content: params[:comment][:content])
     if !@cosme.nil? && @comment.save
       flash[:success] = "コメントを追加しました！"
+      # 自分以外のユーザーからコメントがあったときのみ通知を作成
+      if @user != current_user
+        @user.notifications.create(cosme_id: @cosme.id, variety: 2,
+                                   from_user_id: current_user.id,
+                                   content: @comment.content) # コメントは通知種別2
+        @user.update_attribute(:notification, true)
+      end
     else
       flash[:danger] = "空のコメントは投稿できません。"
     end
