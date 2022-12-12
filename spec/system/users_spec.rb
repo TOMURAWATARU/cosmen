@@ -4,6 +4,7 @@ RSpec.describe "Users", type: :system do
   let!(:user) { create(:user) }
   let!(:admin_user) { create(:user, :admin) }
   let!(:other_user) { create(:user) }
+  let!(:cosme) { create(:cosme, user: user) }
 
   describe "ユーザー一覧ページ" do
     context "管理者ユーザーの場合" do
@@ -180,12 +181,48 @@ RSpec.describe "Users", type: :system do
         login_for_system(user)
       end
 
-      it "料理のお気に入り登録/解除ができること" do
+      it "コスメのお気に入り登録/解除ができること" do
         expect(user.favorite?(cosme)).to be_falsey
         user.favorite(cosme)
         expect(user.favorite?(cosme)).to be_truthy
         user.unfavorite(cosme)
         expect(user.favorite?(cosme)).to be_falsey
+      end
+
+      it "トップページからお気に入り登録/解除ができること", js: true do
+        visit root_path
+        link = find('.like')
+        expect(link[:href]).to include "/favorites/#{cosme.id}/create"
+        link.click
+        link = find('.unlike')
+        expect(link[:href]).to include "/favorites/#{cosme.id}/destroy"
+        link.click
+        link = find('.like')
+        expect(link[:href]).to include "/favorites/#{cosme.id}/create"
+      end
+
+      it "ユーザー個別ページからお気に入り登録/解除ができること", js: true do
+        visit user_path(user)
+        link = find('.like')
+        expect(link[:href]).to include "/favorites/#{cosme.id}/create"
+        link.click
+        link = find('.unlike')
+        expect(link[:href]).to include "/favorites/#{cosme.id}/destroy"
+        link.click
+        link = find('.like')
+        expect(link[:href]).to include "/favorites/#{cosme.id}/create"
+      end
+
+      it "料理個別ページからお気に入り登録/解除ができること", js: true do
+        visit cosme_path(cosme)
+        link = find('.like')
+        expect(link[:href]).to include "/favorites/#{cosme.id}/create"
+        link.click
+        link = find('.unlike')
+        expect(link[:href]).to include "/favorites/#{cosme.id}/destroy"
+        link.click
+        link = find('.like')
+        expect(link[:href]).to include "/favorites/#{cosme.id}/create"
       end
     end
   end

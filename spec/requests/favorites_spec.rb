@@ -20,5 +20,37 @@ RSpec.describe "お気に入り登録機能", type: :request do
         expect(response).to redirect_to login_path
       end
     end
+
+    context "ログインしている場合" do
+      before do
+        login_for_request(user)
+      end
+
+      it "コスメのお気に入り登録ができること" do
+        expect {
+          post "/favorites/#{cosme.id}/create"
+        }.to change(user.favorites, :count).by(1)
+      end
+
+      it "コスメのAjaxによるお気に入り登録ができること" do
+        expect {
+          post "/favorites/#{cosme.id}/create", xhr: true
+        }.to change(user.favorites, :count).by(1)
+      end
+
+      it "コスメのお気に入り解除ができること" do
+        user.favorite(cosme)
+        expect {
+          delete "/favorites/#{cosme.id}/destroy"
+        }.to change(user.favorites, :count).by(-1)
+      end
+
+      it "コスメのAjaxによるお気に入り解除ができること" do
+        user.favorite(cosme)
+        expect {
+          delete "/favorites/#{cosme.id}/destroy", xhr: true
+        }.to change(user.favorites, :count).by(-1)
+      end
+    end
   end
 end

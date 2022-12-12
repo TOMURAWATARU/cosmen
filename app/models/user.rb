@@ -71,8 +71,8 @@ class User < ApplicationRecord
     followers.include?(other_user)
   end
 
-   # コスメをお気に入りに登録する
-   def favorite(cosme)
+  # コスメをお気に入りに登録する
+  def favorite(cosme)
     Favorite.create!(user_id: id, cosme_id: cosme.id)
   end
 
@@ -85,6 +85,4 @@ class User < ApplicationRecord
   def favorite?(cosme)
     !Favorite.find_by(user_id: id, cosme_id: cosme.id).nil?
   end
-
-  private
 end
