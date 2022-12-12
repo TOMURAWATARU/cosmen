@@ -10,7 +10,7 @@ class FavoritesController < ApplicationController
       format.js
     end
   end
-  
+
   def destroy
     @cosme = Cosme.find(params[:cosme_id])
     current_user.favorites.find_by(cosme_id: @cosme.id).destroy
