@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_12_11_173126) do
+ActiveRecord::Schema.define(version: 2022_12_12_092812) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -28,6 +28,14 @@ ActiveRecord::Schema.define(version: 2022_12_11_173126) do
     t.string "picture"
     t.index ["user_id", "created_at"], name: "index_cosmes_on_user_id_and_created_at"
     t.index ["user_id"], name: "index_cosmes_on_user_id"
+  end
+
+  create_table "favorites", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "cosme_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "cosme_id"], name: "index_favorites_on_user_id_and_cosme_id", unique: true
   end
 
   create_table "relationships", force: :cascade do |t|

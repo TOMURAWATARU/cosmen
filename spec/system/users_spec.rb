@@ -4,6 +4,8 @@ RSpec.describe "Users", type: :system do
   let!(:user) { create(:user) }
   let!(:admin_user) { create(:user, :admin) }
   let!(:other_user) { create(:user) }
+  let!(:cosme) { create(:cosme, user: user) }
+  let!(:other_cosme) { create(:cosme, user: other_user) }
 
   describe "ユーザー一覧ページ" do
     context "管理者ユーザーの場合" do
@@ -172,6 +174,77 @@ RSpec.describe "Users", type: :system do
         expect(page).to have_button 'フォロー中'
         click_button 'フォロー中'
         expect(page).to have_button 'フォローする'
+      end
+    end
+
+    context "お気に入り登録/解除" do
+      before do
+        login_for_system(user)
+      end
+
+      it "コスメのお気に入り登録/解除ができること" do
+        expect(user.favorite?(cosme)).to be_falsey
+        user.favorite(cosme)
+        expect(user.favorite?(cosme)).to be_truthy
+        user.unfavorite(cosme)
+        expect(user.favorite?(cosme)).to be_falsey
+      end
+
+      it "トップページからお気に入り登録/解除ができること", js: true do
+        visit root_path
+        link = find('.like')
+        expect(link[:href]).to include "/favorites/#{cosme.id}/create"
+        link.click
+        link = find('.unlike')
+        expect(link[:href]).to include "/favorites/#{cosme.id}/destroy"
+        link.click
+        link = find('.like')
+        expect(link[:href]).to include "/favorites/#{cosme.id}/create"
+      end
+
+      it "ユーザー個別ページからお気に入り登録/解除ができること", js: true do
+        visit user_path(user)
+        link = find('.like')
+        expect(link[:href]).to include "/favorites/#{cosme.id}/create"
+        link.click
+        link = find('.unlike')
+        expect(link[:href]).to include "/favorites/#{cosme.id}/destroy"
+        link.click
+        link = find('.like')
+        expect(link[:href]).to include "/favorites/#{cosme.id}/create"
+      end
+
+      it "コスメ個別ページからお気に入り登録/解除ができること", js: true do
+        visit cosme_path(cosme)
+        link = find('.like')
+        expect(link[:href]).to include "/favorites/#{cosme.id}/create"
+        link.click
+        link = find('.unlike')
+        expect(link[:href]).to include "/favorites/#{cosme.id}/destroy"
+        link.click
+        link = find('.like')
+        expect(link[:href]).to include "/favorites/#{cosme.id}/create"
+      end
+
+      it "お気に入り一覧ページが期待通り表示されること" do
+        visit favorites_path
+        expect(page).not_to have_css ".favorite-cosme"
+        user.favorite(cosme)
+        user.favorite(other_cosme)
+        visit favorites_path
+        expect(page).to have_css ".favorite-cosme", count: 2
+        expect(page).to have_content cosme.name
+        expect(page).to have_content cosme.description
+        expect(page).to have_content "cosmed by #{user.name}"
+        expect(page).to have_link user.name, href: user_path(user)
+        expect(page).to have_content other_cosme.name
+        expect(page).to have_content other_cosme.description
+        expect(page).to have_content "cosmed by #{other_user.name}"
+        expect(page).to have_link other_user.name, href: user_path(other_user)
+        user.unfavorite(other_cosme)
+        visit favorites_path
+        expect(page).to have_css ".favorite-cosme", count: 1
+        expect(page).to have_content cosme.name
       end
     end
   end
