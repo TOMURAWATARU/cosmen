@@ -1,0 +1,28 @@
+<% @list = list %>
+<% @cosme = Cosme.find(list.cosme_id) %>
+<% user = User.find(list.from_user_id) %>
+<li id="list-<%= @cosme.id %>">
+  <div class="list-cosme">
+    <p><%= list.created_at.strftime("%Y/%m/%d(%a) %H:%M") %> </p>
+    <% if list.user_id == list.from_user_id %>
+      <p class="list-message">このコスメをイチオシリストに追加しました。</p>
+    <% else %>
+      <p class="list-message"><%= link_to user.name, user_path(user) %>さんがこのコスメに買いたいリクエストをしました。</p>
+    <% end %>
+  </div>
+  <div class="row">
+    <div class="col-md-2">
+      <%= link_to((image_tag @cosme.picture.url), cosme_path(@cosme), class: 'cosme-picture') %>
+    </div>
+    <div class="col-md-7">
+      <p><%= link_to @cosme.name, cosme_path(@cosme) %></p>
+      <p class="list-cosme-description"><%= @cosme.description %></p>
+    </div>
+    <div class="col-md-3">
+      <%= link_to "リストから削除", "/lists/#{list.id}/destroy",
+                             method: :delete,
+                             class: "unlist",
+                             data: { confirm: "本当にリストから削除しますか？" } %>
+    </div>
+  </div>
+</li>
