@@ -87,4 +87,21 @@ class User < ApplicationRecord
   def favorite?(cosme)
     !Favorite.find_by(user_id: id, cosme_id: cosme.id).nil?
   end
+
+   # コスメをリストに登録する
+   def list(cosme)
+    List.create!(user_id: cosme.user_id, cosme_id: cosme.id, from_user_id: id)
+  end
+
+  # コスメをリストから解除する
+  def unlist(list)
+    list.destroy
+  end
+
+  # 現在のユーザーがリスト登録してたらtrueを返す
+  def list?(cosme)
+    !List.find_by(cosme_id: cosme.id, from_user_id: id).nil?
+  end
+
+  private
 end
