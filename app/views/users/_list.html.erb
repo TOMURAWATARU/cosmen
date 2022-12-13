@@ -1,0 +1,10 @@
+<%= link_to "/lists/#{@cosme.id}/create",
+            method: :post,
+            class: 'list',
+            remote: true do %>
+  <% if current_user == @cosme.user %>
+    <div class="list-btn-list"><i class="fas fa-list-alt"></i> イチオシリストに追加する</div>
+  <% else %>
+    <div class="list-btn-list"><i class="fas fa-utensils"></i> 買いたいリクエストを送る</div>
+  <% end %>
+<% end %>
