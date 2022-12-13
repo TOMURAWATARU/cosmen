@@ -5,8 +5,22 @@ class ListsController < ApplicationController
   end
 
   def create
+    @cosme = Cosme.find(params[:cosme_id])
+    @user = @cosme.user
+    current_user.list(@cosme)
+    respond_to do |format|
+      format.html { redirect_to request.referrer || root_url }
+      format.js
+    end
   end
 
   def destroy
+    list = List.find(params[:list_id])
+    @cosme = list.cosme
+    list.destroy
+    respond_to do |format|
+      format.html { redirect_to request.referrer || root_url }
+      format.js
+    end
   end
 end
