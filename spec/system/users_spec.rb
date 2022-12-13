@@ -320,4 +320,79 @@ RSpec.describe "Users", type: :system do
       end
     end
   end
+
+  context "リスト登録/解除" do
+    before do
+      login_for_system(user)
+    end
+
+    it "コスメのお気に入り登録/解除ができること" do
+      expect(user.list?(cosme)).to be_falsey
+      user.list(cosme)
+      expect(user.list?(cosme)).to be_truthy
+      user.unlist(List.first)
+      expect(user.list?(cosme)).to be_falsey
+    end
+
+    it "トップページからリスト登録/解除ができること", js: true do
+      visit root_path
+      link = find('.list')
+      expect(link[:href]).to include "/lists/#{cosme.id}/create"
+      link.click
+      link = find('.unlist')
+      expect(link[:href]).to include "/lists/#{List.first.id}/destroy"
+      link.click
+      link = find('.list')
+      expect(link[:href]).to include "/lists/#{cosme.id}/create"
+    end
+
+    it "ユーザー個別ページからリスト登録/解除ができること", js: true do
+      visit user_path(user)
+      link = find('.list')
+      expect(link[:href]).to include "/lists/#{cosme.id}/create"
+      link.click
+      link = find('.unlist')
+      expect(link[:href]).to include "/lists/#{List.first.id}/destroy"
+      link.click
+      link = find('.list')
+      expect(link[:href]).to include "/lists/#{cosme.id}/create"
+    end
+
+    it "コスメ個別ページからリスト登録/解除ができること", js: true do
+      link = find('.list')
+      expect(link[:href]).to include "/lists/#{cosme.id}/create"
+      link.click
+      link = find('.unlist')
+      expect(link[:href]).to include "/lists/#{List.first.id}/destroy"
+      link.click
+      link = find('.list')
+      expect(link[:href]).to include "/lists/#{cosme.id}/create"
+    end
+
+    it "リスト一覧ページが期待通り表示され、リストから削除することもできること" do
+      visit lists_path
+      expect(page).not_to have_css ".list-cosme"
+      user.list(cosme)
+      cosme_2 = create(:cosme, user: user)
+      other_user.list(cosme_2)
+      visit lists_path
+      expect(page).to have_css ".list-cosme", count: 2
+      expect(page).to have_content cosme.name
+      expect(page).to have_content cosme.description
+      expect(page).to have_content List.last.created_at.strftime("%Y/%m/%d(%a) %H:%M")
+      expect(page).to have_content "このコスメをイチオシリストに追加しました。"
+      expect(page).to have_content cosme_2.name
+      expect(page).to have_content cosme_2.description
+      expect(page).to have_content List.first.created_at.strftime("%Y/%m/%d(%a) %H:%M")
+      expect(page).to have_content "#{other_user.name}さんがこのコスメに買いたいリクエストをしました。"
+      expect(page).to have_link other_user.name, href: user_path(other_user)
+      user.unlist(List.first)
+      visit lists_path
+      expect(page).to have_css ".list-cosme", count: 1
+      expect(page).to have_content cosme.name
+      find('.unlist').click
+      visit lists_path
+      expect(page).not_to have_css ".list-cosme"
+    end
+  end
 end
