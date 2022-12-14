@@ -12,6 +12,9 @@
   <span class="cosme_times">感想の数：<%= cosme.logs.count %>回　</span>
   <span class="popularity">人気度：<%= cosme.popularity %></span><br>
   <span class="reference"><%= link_to "詳細", cosme.reference, target: :_blank %></span>
+   <% if current_user == cosme.user %>
+    <%= render "logs/new_form_mini" %>
+  <% end %>
   <span class="timestamp">
     <%= time_ago_in_words(cosme.created_at) %>前に投稿
   </span>

@@ -1,5 +1,6 @@
 class LogsController < ApplicationController
   before_action :logged_in_user
+  before_action :correct_user, only: :create
 
   def create
     @cosme = Cosme.find(params[:cosme_id])
@@ -18,4 +19,11 @@ class LogsController < ApplicationController
     end
     redirect_to cosme_url(@cosme)
   end
+
+  private
+
+    def correct_user
+      cosme = current_user.cosmes.find_by(id: params[:cosme_id])
+      redirect_to root_url if cosme.nil?
+    end
 end
