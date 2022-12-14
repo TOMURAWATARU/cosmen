@@ -5,7 +5,7 @@ class LogsController < ApplicationController
     @cosme = Cosme.find(params[:cosme_id])
     @log = @cosme.logs.build(content: params[:log][:content])
     @log.save
-    flash[:success] = "ログを追加しました！"
+    flash[:success] = "使ってみた感想を追加しました！"
     redirect_to cosme_path(@cosme)
   end
 
@@ -14,7 +14,7 @@ class LogsController < ApplicationController
     @cosme = @log.cosme
     if current_user == @cosme.user
       @log.destroy
-      flash[:success] = "ログを削除しました"
+      flash[:success] = "使ってみた感想を削除しました"
     end
     redirect_to cosme_url(@cosme)
   end

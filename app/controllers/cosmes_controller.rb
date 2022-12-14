@@ -16,6 +16,7 @@ class CosmesController < ApplicationController
     @cosme = current_user.cosmes.build(cosme_params)
     if @cosme.save
       flash[:success] = "コスメが登録されました！"
+      Log.create(cosme_id: @cosme.id, content: @cosme.cosme_memo)
       redirect_to cosme_path(@cosme)
     else
       render 'cosmes/new'

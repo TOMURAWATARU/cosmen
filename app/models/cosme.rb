@@ -24,6 +24,10 @@ class Cosme < ApplicationRecord
     Comment.where("cosme_id = ?", cosme_id)
   end
 
+  def feed_log(cosme_id)
+    Log.where("cosme_id = ?", cosme_id)
+  end
+
   private
 
     def picture_size

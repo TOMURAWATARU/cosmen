@@ -10,7 +10,7 @@ ja:
       user: ユーザー
       cosme: コスメ
       comment: コメント
-      log: ログ
+      log: 使ってみた感想
     attributes:
       user:
         id: ID
@@ -37,7 +37,7 @@ ja:
         cosme_id: コメントされたコスメのID
         content: コメント
       log:
-        cosme_id: ログをつけるコスメのID
+        cosme_id: 使ってみた感想をつけるコスメのID
         content: メモ
   date:
     abbr_day_names:
