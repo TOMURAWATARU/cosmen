@@ -29,6 +29,9 @@ end
                 popularity: 5,
                 cosme_memo: "ナチュラルで自分の肌に合っている気がする！",
                 user_id: 1)
+  cosme = Cosme.first
+  Log.create!(cosme_id: cosme.id,  # 追記
+              content: cosme.cosme_memo)
 end
 
 users = User.all

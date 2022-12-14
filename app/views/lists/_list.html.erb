@@ -17,6 +17,7 @@
     <div class="col-md-7">
       <p><%= link_to @cosme.name, cosme_path(@cosme) %></p>
       <p class="list-cosme-description"><%= @cosme.description %></p>
+      <%= render "logs/new_form_mini" %>
     </div>
     <div class="col-md-3">
       <%= link_to "リストから削除", "/lists/#{list.id}/destroy",

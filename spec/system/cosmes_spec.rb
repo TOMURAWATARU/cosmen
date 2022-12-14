@@ -5,6 +5,7 @@ RSpec.describe "Cosmes", type: :system do
   let!(:other_user) { create(:user) }
   let!(:cosme) { create(:cosme, :picture, user: user) }
   let!(:comment) { create(:comment, user_id: user.id, cosme: cosme) }
+  let!(:log) { create(:log, cosme: cosme) }
 
   describe "コスメ登録ページ" do
     before do
@@ -173,6 +174,65 @@ RSpec.describe "Cosmes", type: :system do
           expect(page).to have_selector 'span', text: user.name
           expect(page).to have_selector 'span', text: comment.content
           expect(page).not_to have_link '削除', href: cosme_path(cosme)
+        end
+      end
+    end
+
+    context "ログ登録＆削除" do
+      context "コスメ詳細ページから" do
+        it "自分のコスメに対するログ登録＆削除が正常に完了すること" do
+          login_for_system(user)
+          visit cosme_path(cosme)
+          fill_in "log_content", with: "ログ投稿テスト"
+          click_button "感想を追加する"
+          within find("#log-#{Log.first.id}") do
+            expect(page).to have_selector 'span', text: "#{cosme.logs.count}回目"
+            expect(page).to have_selector 'span',
+                                          text: %Q(#{Log.last.created_at.strftime("%Y/%m/%d(%a)")})
+            expect(page).to have_selector 'span', text: 'ログ投稿テスト'
+          end
+          expect(page).to have_content "使ってみた感想を追加しました！"
+          click_link "削除", href: log_path(Log.first)
+          expect(page).not_to have_selector 'span', text: 'ログ投稿テスト'
+          expect(page).to have_content "使ってみた感想を削除しました"
+        end
+
+        it "別ユーザーのログにはログ登録フォームが無いこと" do
+          login_for_system(other_user)
+          visit cosme_path(cosme)
+          expect(page).not_to have_button "追加"
+        end
+      end
+
+      context "トップページから" do
+        it "自分のコスメに対するログ登録が正常に完了すること" do
+          login_for_system(user)
+          visit root_path
+          fill_in "log_content", with: "ログ投稿テスト"
+          click_button "追加"
+          expect(Log.first.content).to eq 'ログ投稿テスト'
+          expect(page).to have_content "使ってみた感想を追加しました！"
+        end
+
+        it "別ユーザーのコスメにはログ登録フォームがないこと" do
+          create(:cosme, user: other_user)
+          login_for_system(user)
+          user.follow(other_user)
+          visit root_path
+          within find("#cosme-#{Cosme.first.id}") do
+            expect(page).not_to have_button "追加"
+          end
+        end
+      end
+
+      context "プロフィールページから" do
+        it "自分のコスメに対するログ登録が正常に完了すること" do
+          login_for_system(user)
+          visit user_path(user)
+          fill_in "log_content", with: "ログ投稿テスト"
+          click_button "追加"
+          expect(Log.first.content).to eq 'ログ投稿テスト'
+          expect(page).to have_content "使ってみた感想を追加しました！"
         end
       end
     end
