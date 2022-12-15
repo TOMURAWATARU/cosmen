@@ -42,7 +42,8 @@ ja:
         content: メモ
       maker:
         cosme_id: 紐づいたコスメのID
-        name: メーカー
+        name: メーカー(複数可)
+        genre: ジャンル
   date:
     abbr_day_names:
     - 日

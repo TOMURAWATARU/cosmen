@@ -25,10 +25,19 @@ RSpec.describe "Cosmes", type: :system do
       it "入力部分に適切なラベルが表示されること" do
         expect(page).to have_content 'コスメ名'
         expect(page).to have_content '説明'
+        expect(page).to have_css 'label[for=cosme_makers_attributes_0_name]',
+                                 text: 'メーカー', count: 1
+        expect(page).to have_css 'label[for=cosme_makers_attributes_0_genre]',
+                                 text: 'ジャンル', count: 1
         expect(page).to have_content 'コツ・ポイント'
         expect(page).to have_content '参照用URL'
         expect(page).to have_content '人気度 [1~5]'
         expect(page).to have_content 'コスメメモ'
+      end
+
+      it "メーカー入力部分が3行表示されること" do
+        expect(page).to have_css 'input.maker_name', count: 3
+        expect(page).to have_css 'input.maker_genre', count: 3
       end
     end
 
@@ -39,6 +48,8 @@ RSpec.describe "Cosmes", type: :system do
         fill_in "コツ・ポイント", with: "薄く馴染ませるのがポイント"
         fill_in "参照用URL", with: "https://brand.finetoday.com/jp/uno/products/face_color_creator/"
         fill_in "人気度", with: 5
+        fill_in "cosme[makers_attributes][0][name]", with: "UNO"
+        fill_in "cosme[makers_attributes][0][genre]", with: "bbクリーム"
         attach_file "cosme[picture]", "#{Rails.root}/spec/fixtures/test_cosme.jpg"
         click_button "登録する"
         expect(page).to have_content "コスメが登録されました！"

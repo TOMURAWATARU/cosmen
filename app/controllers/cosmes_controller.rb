@@ -4,6 +4,7 @@ class CosmesController < ApplicationController
 
   def new
     @cosme = Cosme.new
+    @cosme.makers.build
   end
 
   def index
@@ -57,7 +58,8 @@ class CosmesController < ApplicationController
 
     def cosme_params
       params.require(:cosme).permit(:name, :description, :tips,
-                                    :reference, :popularity, :cosme_memo, :picture)
+                                    :reference, :popularity, :cosme_memo, :picture,
+                                     makers_attributes: [:id, :name, :genre])
     end
 
     def correct_user

@@ -53,7 +53,7 @@ User.create!(
         popularity: 3,
         cosme_memo: cosme_memo1,
         picture: open("#{Rails.root}/public/images/cosme1.jpg"),
-        makers_attributes: [{ name: "UNO" }],
+        makers_attributes: [ { name: "UNO", genre: "bbクリーム" } ],
       },
       {
         name: "ザBB(カバー&モイストコーティング)",
@@ -64,7 +64,7 @@ User.create!(
         popularity: 4,
         cosme_memo: cosme_memo1,
         picture: open("#{Rails.root}/public/images/cosme2.jpg"),
-        makers_attributes: [ { name: "ケイト" } ],
+        makers_attributes: [ { name: "ケイト", genre: "bbクリーム" } ],
       },
       {
         name: "レプリカ オードトワレ レイジーサンデー モーニング",
@@ -75,7 +75,7 @@ User.create!(
         popularity: 4,
         cosme_memo: cosme_memo1,
         picture: open("#{Rails.root}/public/images/cosme3.jpg"),
-        makers_attributes: [ { name: "メゾンマルジェラフレグランス" } ],
+        makers_attributes: [ { name: "メゾンマルジェラフレグランス", genre: "香水" } ],
       },
       {
         name: "ザ・タイムR アクア ",
@@ -85,7 +85,7 @@ User.create!(
         reference: "https://www.cosme.net/product/product_id/10079040/top",
         cosme_memo: cosme_memo2,
         picture: open("#{Rails.root}/public/images/cosme4.jpg"),
-        makers_attributes: [ { name: "イプサ" } ],
+        makers_attributes: [ { name: "イプサ", genre: "化粧水" } ],
       },
       {
         name: "ジェニフィック アドバンスト N",
@@ -96,7 +96,7 @@ User.create!(
         popularity: 5,
         cosme_memo: cosme_memo3,
         picture: open("#{Rails.root}/public/images/cosme5.jpg"),
-        makers_attributes: [ { name: "ランコム" } ],
+        makers_attributes: [ { name: "ランコム", genre: "美容液" } ],
       },
       {
         name: "ドラマティックパウダリーEX",
@@ -107,7 +107,7 @@ User.create!(
         popularity: 3,
         cosme_memo: cosme_memo2,
         picture: open("#{Rails.root}/public/images/cosme6.jpg"),
-        makers_attributes: [ { name: "マキアージュ" } ],
+        makers_attributes: [ { name: "マキアージュ", genre: "ファンデーション" } ],
       },
       {
         name: "ホワイトリリー オードパルファン",
@@ -118,18 +118,18 @@ User.create!(
         popularity: 5,
         cosme_memo: cosme_memo1,
         picture: open("#{Rails.root}/public/images/cosme7.jpg"),
-        makers_attributes: [ { name: "SHIRO" } ],
+        makers_attributes: [ { name: "SHIRO", genre: "香水" } ],
       },
       {
         name: "カネボウ ヴェイル オブ デイ",
         user_id: 2,
         description: description2,
         tips: tips2,
-        reference: "https://cookpad.com/recipe/5849961",
+        reference: "https://www.cosme.net/product/product_id/10218271/sku/1109261#image-659388",
         popularity: 4,
         cosme_memo: cosme_memo2,
         picture: open("#{Rails.root}/public/images/cosme8.jpg"),
-        makers_attributes: [ { name: "カネボウ" } ],
+        makers_attributes: [ { name: "カネボウ", genre: "美容液" } ],
       },
       {
         name: "THE TONER",
@@ -140,7 +140,7 @@ User.create!(
         popularity: 5,
         cosme_memo: cosme_memo3,
         picture: open("#{Rails.root}/public/images/cosme9.jpg"),
-        makers_attributes: [ { name: "BULK HOMME" } ],
+        makers_attributes: [ { name: "BULK HOMME", genre: "化粧水" } ],
       },
     ]
   )
