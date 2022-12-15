@@ -6,6 +6,10 @@ class CosmesController < ApplicationController
     @cosme = Cosme.new
   end
 
+  def index
+    @log = Log.new
+  end
+
   def show
     @cosme = Cosme.find(params[:id])
     @comment = Comment.new

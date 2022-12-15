@@ -237,4 +237,91 @@ RSpec.describe "Cosmes", type: :system do
       end
     end
   end
+
+  context "検索機能" do
+    context "ログインしている場合" do
+      before do
+        login_for_system(user)
+        visit root_path
+      end
+
+      it "ログイン後の各ページに検索窓が表示されていること" do
+        expect(page).to have_css 'form#cosme_search'
+        visit about_path
+        expect(page).to have_css 'form#cosme_search'
+        visit use_of_terms_path
+        expect(page).to have_css 'form#cosme_search'
+        visit users_path
+        expect(page).to have_css 'form#cosme_search'
+        visit user_path(user)
+        expect(page).to have_css 'form#cosme_search'
+        visit edit_user_path(user)
+        expect(page).to have_css 'form#cosme_search'
+        visit following_user_path(user)
+        expect(page).to have_css 'form#cosme_search'
+        visit followers_user_path(user)
+        expect(page).to have_css 'form#cosme_search'
+        visit cosmes_path
+        expect(page).to have_css 'form#cosme_search'
+        visit cosme_path(cosme)
+        expect(page).to have_css 'form#cosme_search'
+        visit new_cosme_path
+        expect(page).to have_css 'form#cosme_search'
+        visit edit_cosme_path(cosme)
+        expect(page).to have_css 'form#cosme_search'
+      end
+
+      it "フィードの中から検索ワードに該当する結果が表示されること" do
+        create(:cosme, name: 'ビタミンc', user: user)
+        create(:cosme, name: 'ビタミンe', user: other_user)
+        create(:cosme, name: '乳液', user: user)
+        create(:cosme, name: '美容液', user: other_user)
+
+        # 誰もフォローしない場合
+        fill_in 'q_name_cont', with: 'ビタミン'
+        click_button '検索'
+        expect(page).to have_css 'h3', text: "”ビタミン”の検索結果：1件"
+        within find('.cosmes') do
+          expect(page).to have_css 'li', count: 1
+        end
+        fill_in 'q_name_cont', with: '液'
+        click_button '検索'
+        expect(page).to have_css 'h3', text: "”液”の検索結果：1件"
+        within find('.cosmes') do
+          expect(page).to have_css 'li', count: 1
+        end
+
+        # other_userをフォローする場合
+        user.follow(other_user)
+        fill_in 'q_name_cont', with: 'ビタミン'
+        click_button '検索'
+        expect(page).to have_css 'h3', text: "”ビタミン”の検索結果：2件"
+        within find('.cosmes') do
+          expect(page).to have_css 'li', count: 2
+        end
+        fill_in 'q_name_cont', with: '液'
+        click_button '検索'
+        expect(page).to have_css 'h3', text: "”液”の検索結果：2件"
+        within find('.cosmes') do
+          expect(page).to have_css 'li', count: 2
+        end
+      end
+
+      it "検索ワードを入れずに検索ボタンを押した場合、コスメ一覧が表示されること" do
+        fill_in 'q_name_cont', with: ''
+        click_button '検索'
+        expect(page).to have_css 'h3', text: "コスメ一覧"
+        within find('.cosmes') do
+          expect(page).to have_css 'li', count: Cosme.count
+        end
+      end
+    end
+
+    context "ログインしていない場合" do
+      it "検索窓が表示されないこと" do
+        visit root_path
+        expect(page).not_to have_css 'form#cosme_search'
+      end
+    end
+  end
 end
