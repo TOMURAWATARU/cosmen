@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe "Cosmes", type: :system do
   let!(:user) { create(:user) }
   let!(:other_user) { create(:user) }
-  let!(:cosme) { create(:cosme, :picture, user: user) }
+  let!(:cosme) { create(:cosme, :picture, :makers, user: user) }
   let!(:comment) { create(:comment, user_id: user.id, cosme: cosme) }
   let!(:log) { create(:log, cosme: cosme) }
 
@@ -88,11 +88,19 @@ RSpec.describe "Cosmes", type: :system do
       it "入力部分に適切なラベルが表示されること" do
         expect(page).to have_content 'コスメ名'
         expect(page).to have_content '説明'
+        expect(page).to have_css 'p.title-maker-name', text: 'メーカー（複数可）', count: 1
+        expect(page).to have_css 'p.title-maker-genre', text: 'ジャンル', count: 1
         expect(page).to have_content 'コツ・ポイント'
         expect(page).to have_content '参照用URL'
         expect(page).to have_content '人気度 [1~5]'
       end
+
+      it "メーカー入力部分が3行表示されること" do
+        expect(page).to have_css 'input.maker_name', count: 3
+        expect(page).to have_css 'input.maker_genre', count: 3
+      end
     end
+
 
     context "コスメの更新処理" do
       it "有効な更新" do
@@ -101,6 +109,8 @@ RSpec.describe "Cosmes", type: :system do
         fill_in "コツ・ポイント", with: "編集：薄く馴染ませるのがポイント"
         fill_in "参照用URL", with: "henshu-https://brand.finetoday.com/jp/uno/products/face_color_creator/"
         fill_in "人気度", with: 1
+        fill_in "cosme[makers_attributes][0][name]", with: "編集-ウーノ"
+        fill_in "cosme[makers_attributes][0][genre]", with: "編集-ファンデーション"
         attach_file "cosme[picture]", "#{Rails.root}/spec/fixtures/test_cosme2.jpg"
         click_button "更新する"
         expect(page).to have_content "コスメ情報が更新されました！"
@@ -109,6 +119,8 @@ RSpec.describe "Cosmes", type: :system do
         expect(cosme.reload.tips).to eq "編集：薄く馴染ませるのがポイント"
         expect(cosme.reload.reference).to eq "henshu-https://brand.finetoday.com/jp/uno/products/face_color_creator/"
         expect(cosme.reload.popularity).to eq 1
+        expect(cosme.reload.makers.first.name).to eq "編集-ウーノ"
+        expect(cosme.reload.makers.first.genre).to eq "編集-ファンデーション"
         expect(cosme.reload.picture.url).to include "test_cosme2.jpg"
       end
 

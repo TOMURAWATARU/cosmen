@@ -9,6 +9,16 @@ FactoryBot.define do
     created_at { Time.current }
   end
 
+  trait :makers do
+    makers_attributes {
+                             [
+                               { name: "じゃがいも", genre: "1個" },
+                               { name: "玉ねぎ", genre: "2個" },
+                               { name: "ニンジン", genre: "3個" },
+                             ]
+    }
+  end
+
   trait :yesterday do
     created_at { 1.day.ago }
   end
