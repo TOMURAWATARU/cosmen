@@ -19,27 +19,59 @@ RSpec.describe "コスメの登録", type: :request do
       end
     end
 
-    it "有効なコスメデータで登録できること" do
-      expect {
-        post cosmes_path, params: { cosme: { name: "フェイスカラークリエイター",
-                                             description: "自然な仕上がりになるものです",
-                                             tips: "薄く馴染ませるのがポイント",
-                                             reference: "https://brand.finetoday.com/jp/uno/products/face_color_creator/",
-                                             popularity: 5 } }
-      }.to change(Cosme, :count).by(1)
-      follow_redirect!
-      expect(response).to render_template('cosmes/show')
+    context "材料有りの料理登録" do
+      it "有効なコスメデータで登録できること" do
+        expect {
+          post cosmes_path, params: { cosme: { name: "フェイスカラークリエイター",
+                                               description: "自然な仕上がりになるものです",
+                                               tips: "薄く馴染ませるのがポイント",
+                                               reference: "https://brand.finetoday.com/jp/uno/products/face_color_creator/",
+                                               popularity: 5,
+                                               makers_attributes: [
+                                                 name: "UNO",
+                                                 genre: "bbクリーム" ] } }
+        }.to change(Cosme, :count).by(1)
+        redirect_to Cosme.first
+        follow_redirect!
+        expect(response).to render_template('cosmes/show')
+      end
+
+      it "メーカーのデータも同時に増えること" do
+        expect {
+          post cosmes_path, params: { cosme: { name: "フェイスカラークリエイター",
+                                              makers_attributes: [
+                                                name: "UNO",
+                                                genre: "bbクリーム"] } } 
+        }.to change(Maker, :count).by(1)
+      end
+
+      it "無効なコスメデータでは登録できないこと" do
+        expect {
+          post cosmes_path, params: { cosme: { name: "",
+                                               description: "自然な仕上がりになるものです",
+                                               tips: "薄く馴染ませるのがポイント",
+                                               reference: "https://brand.finetoday.com/jp/uno/products/face_color_creator/",
+                                               popularity: 5,
+                                               makers_attributes: [
+                                                 name: "UNO",
+                                                 genre: "bbクリーム"] } } 
+        }.not_to change(Cosme, :count)
+        expect(response).to render_template('cosmes/new')
+      end
     end
 
-    it "無効なコスメデータでは登録できないこと" do
-      expect {
-        post cosmes_path, params: { cosme: { name: "",
-                                             description: "自然な仕上がりになるものです",
-                                             tips: "薄く馴染ませるのがポイント",
-                                             reference: "https://brand.finetoday.com/jp/uno/products/face_color_creator/",
-                                             popularity: 5 } }
-      }.not_to change(Cosme, :count)
-      expect(response).to render_template('cosmes/new')
+    context "メーカー無しのコスメ登録" do
+      it "正常に完了すること" do
+        expect {
+          post cosmes_path, params: { cosme: { name: "フェイスカラークリエイター" } }
+        }.to change(Cosme, :count).by(1)
+      end
+
+      it "メーカーのデータは増えないこと" do
+        expect {
+          post cosmes_path, params: { cosme: { name: "フェイスカラークリエイター" } }
+        }.not_to change(Maker, :count)
+      end
     end
   end
 

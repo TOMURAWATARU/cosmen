@@ -50,6 +50,8 @@ gem 'carrierwave', '1.2.2'
 
 gem "mini_magick", '>= 4.9.4'
 
+gem 'ransack'
+
 group :production do
  gem 'fog', '1.42'
 end

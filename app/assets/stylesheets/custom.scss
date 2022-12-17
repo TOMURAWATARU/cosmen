@@ -410,3 +410,47 @@ a.list, a.unlist {
 .list-dish-description {
   margin-bottom: 20px;
 }
+
+//// メーカー////
+.title-maker-name, .title-maker-genre {
+  font-weight: bold;
+}
+
+.makers {
+  margin-top: 30px;
+  margin-bottom: 30px;
+  h5 {
+    font-size: 17px;
+  }
+}
+
+.title-makers {
+  font-size: 17px;
+  font-weight: bold;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+table.maker {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+table.maker th, table.maker td {
+  padding: 10px 0;
+  text-align: center;
+}
+
+table.maker tr:nth-child(odd) {
+  background-color: #eee 
+}
+
+.cosme-maker {
+  margin: 15px 0;
+}
+
+.title-maker-mini {
+  font-weight: bold;
+  margin-bottom: 5px;
+}

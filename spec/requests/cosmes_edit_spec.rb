@@ -16,7 +16,10 @@ RSpec.describe "料理編集", type: :request do
                                                   description: "自然な仕上がりになるものです",
                                                   tips: "薄く馴染ませるのがポイント",
                                                   reference: "https://brand.finetoday.com/jp/uno/products/face_color_creator/",
-                                                  popularity: 5 } }
+                                                  popularity: 5,
+                                                  makers_attributes:[
+                                                    name: "編集-UNO",
+                                                    genre: "編集-bbクリーム"] } }
       redirect_to cosme
       follow_redirect!
       expect(response).to render_template('cosmes/show')

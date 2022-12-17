@@ -157,6 +157,10 @@ RSpec.describe "Users", type: :system do
           expect(page).to have_content cosme.description
           expect(page).to have_content cosme.user.name
           expect(page).to have_content cosme.popularity
+          cosme.makers.each do |i|
+            expect(page).to have_content i.name
+            expect(page).to have_content i.genre
+          end
         end
       end
 
@@ -235,11 +239,11 @@ RSpec.describe "Users", type: :system do
         expect(page).to have_css ".favorite-cosme", count: 2
         expect(page).to have_content cosme.name
         expect(page).to have_content cosme.description
-        expect(page).to have_content "cosmed by #{user.name}"
+        expect(page).to have_content "by #{user.name}"
         expect(page).to have_link user.name, href: user_path(user)
         expect(page).to have_content other_cosme.name
         expect(page).to have_content other_cosme.description
-        expect(page).to have_content "cosmed by #{other_user.name}"
+        expect(page).to have_content "by #{other_user.name}"
         expect(page).to have_link other_user.name, href: user_path(other_user)
         user.unfavorite(other_cosme)
         visit favorites_path

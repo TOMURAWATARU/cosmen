@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe "Cosmes", type: :system do
   let!(:user) { create(:user) }
   let!(:other_user) { create(:user) }
-  let!(:cosme) { create(:cosme, :picture, user: user) }
+  let!(:cosme) { create(:cosme, :picture, :makers, user: user) }
   let!(:comment) { create(:comment, user_id: user.id, cosme: cosme) }
   let!(:log) { create(:log, cosme: cosme) }
 
@@ -25,10 +25,19 @@ RSpec.describe "Cosmes", type: :system do
       it "入力部分に適切なラベルが表示されること" do
         expect(page).to have_content 'コスメ名'
         expect(page).to have_content '説明'
+        expect(page).to have_css 'label[for=cosme_makers_attributes_0_name]',
+                                 text: 'メーカー', count: 1
+        expect(page).to have_css 'label[for=cosme_makers_attributes_0_genre]',
+                                 text: 'ジャンル', count: 1
         expect(page).to have_content 'コツ・ポイント'
         expect(page).to have_content '参照用URL'
         expect(page).to have_content '人気度 [1~5]'
         expect(page).to have_content 'コスメメモ'
+      end
+
+      it "メーカー入力部分が3行表示されること" do
+        expect(page).to have_css 'input.maker_name', count: 3
+        expect(page).to have_css 'input.maker_genre', count: 3
       end
     end
 
@@ -39,6 +48,8 @@ RSpec.describe "Cosmes", type: :system do
         fill_in "コツ・ポイント", with: "薄く馴染ませるのがポイント"
         fill_in "参照用URL", with: "https://brand.finetoday.com/jp/uno/products/face_color_creator/"
         fill_in "人気度", with: 5
+        fill_in "cosme[makers_attributes][0][name]", with: "UNO"
+        fill_in "cosme[makers_attributes][0][genre]", with: "bbクリーム"
         attach_file "cosme[picture]", "#{Rails.root}/spec/fixtures/test_cosme.jpg"
         click_button "登録する"
         expect(page).to have_content "コスメが登録されました！"
@@ -77,11 +88,19 @@ RSpec.describe "Cosmes", type: :system do
       it "入力部分に適切なラベルが表示されること" do
         expect(page).to have_content 'コスメ名'
         expect(page).to have_content '説明'
+        expect(page).to have_css 'p.title-maker-name', text: 'メーカー（複数可）', count: 1
+        expect(page).to have_css 'p.title-maker-genre', text: 'ジャンル', count: 1
         expect(page).to have_content 'コツ・ポイント'
         expect(page).to have_content '参照用URL'
         expect(page).to have_content '人気度 [1~5]'
       end
+
+      it "メーカー入力部分が3行表示されること" do
+        expect(page).to have_css 'input.maker_name', count: 3
+        expect(page).to have_css 'input.maker_genre', count: 3
+      end
     end
+
 
     context "コスメの更新処理" do
       it "有効な更新" do
@@ -90,6 +109,8 @@ RSpec.describe "Cosmes", type: :system do
         fill_in "コツ・ポイント", with: "編集：薄く馴染ませるのがポイント"
         fill_in "参照用URL", with: "henshu-https://brand.finetoday.com/jp/uno/products/face_color_creator/"
         fill_in "人気度", with: 1
+        fill_in "cosme[makers_attributes][0][name]", with: "編集-ウーノ"
+        fill_in "cosme[makers_attributes][0][genre]", with: "編集-ファンデーション"
         attach_file "cosme[picture]", "#{Rails.root}/spec/fixtures/test_cosme2.jpg"
         click_button "更新する"
         expect(page).to have_content "コスメ情報が更新されました！"
@@ -98,6 +119,8 @@ RSpec.describe "Cosmes", type: :system do
         expect(cosme.reload.tips).to eq "編集：薄く馴染ませるのがポイント"
         expect(cosme.reload.reference).to eq "henshu-https://brand.finetoday.com/jp/uno/products/face_color_creator/"
         expect(cosme.reload.popularity).to eq 1
+        expect(cosme.reload.makers.first.name).to eq "編集-ウーノ"
+        expect(cosme.reload.makers.first.genre).to eq "編集-ファンデーション"
         expect(cosme.reload.picture.url).to include "test_cosme2.jpg"
       end
 
@@ -135,6 +158,10 @@ RSpec.describe "Cosmes", type: :system do
         expect(page).to have_content cosme.tips
         expect(page).to have_content cosme.reference
         expect(page).to have_content cosme.popularity
+        cosme.makers.each do |i|
+          expect(page).to have_content i.name
+          expect(page).to have_content i.genre
+        end
         expect(page).to have_link nil, href: cosme_path(cosme), class: 'cosme-picture'
       end
     end
@@ -234,6 +261,102 @@ RSpec.describe "Cosmes", type: :system do
           expect(Log.first.content).to eq 'ログ投稿テスト'
           expect(page).to have_content "使ってみた感想を追加しました！"
         end
+      end
+    end
+  end
+
+  context "検索機能" do
+    context "ログインしている場合" do
+      before do
+        login_for_system(user)
+        visit root_path
+      end
+
+      it "ログイン後の各ページに検索窓が表示されていること" do
+        expect(page).to have_css 'form#cosme_search'
+        visit about_path
+        expect(page).to have_css 'form#cosme_search'
+        visit use_of_terms_path
+        expect(page).to have_css 'form#cosme_search'
+        visit users_path
+        expect(page).to have_css 'form#cosme_search'
+        visit user_path(user)
+        expect(page).to have_css 'form#cosme_search'
+        visit edit_user_path(user)
+        expect(page).to have_css 'form#cosme_search'
+        visit following_user_path(user)
+        expect(page).to have_css 'form#cosme_search'
+        visit followers_user_path(user)
+        expect(page).to have_css 'form#cosme_search'
+        visit cosmes_path
+        expect(page).to have_css 'form#cosme_search'
+        visit cosme_path(cosme)
+        expect(page).to have_css 'form#cosme_search'
+        visit new_cosme_path
+        expect(page).to have_css 'form#cosme_search'
+        visit edit_cosme_path(cosme)
+        expect(page).to have_css 'form#cosme_search'
+      end
+
+      it "フィードの中から検索ワードに該当する結果が表示されること" do
+        create(:cosme, name: 'ビタミンc', user: user)
+        create(:cosme, name: 'ビタミンe', user: other_user)
+        create(:cosme, name: '乳液', user: user)
+        create(:cosme, name: '美容液', user: other_user)
+
+        # 誰もフォローしない場合
+        fill_in 'q_name_or_makers_name_cont', with: 'ビタミン'
+        click_button '検索'
+        expect(page).to have_css 'h3', text: "”ビタミン”の検索結果：1件"
+        within find('.cosmes') do
+          expect(page).to have_css 'li', count: 1
+        end
+        fill_in 'q_name_or_makers_name_cont', with: '液'
+        click_button '検索'
+        expect(page).to have_css 'h3', text: "”液”の検索結果：1件"
+        within find('.cosmes') do
+          expect(page).to have_css 'li', count: 1
+        end
+
+        # other_userをフォローする場合
+        user.follow(other_user)
+        fill_in 'q_name_or_makers_name_cont', with: 'ビタミン'
+        click_button '検索'
+        expect(page).to have_css 'h3', text: "”ビタミン”の検索結果：2件"
+        within find('.cosmes') do
+          expect(page).to have_css 'li', count: 2
+        end
+        fill_in 'q_name_or_makers_name_cont', with: '液'
+        click_button '検索'
+        expect(page).to have_css 'h3', text: "”液”の検索結果：2件"
+        within find('.cosmes') do
+          expect(page).to have_css 'li', count: 2
+        end
+
+        # メーカーも含めて検索に引っかかること
+        create(:maker, name: '株式会社ビタミン', cosme: Cosme.first)
+        fill_in 'q_name_or_makers_name_cont', with: 'ビタミン'
+        click_button '検索'
+        expect(page).to have_css 'h3', text: "”ビタミン”の検索結果：3件"
+        within find('.cosmes') do
+          expect(page).to have_css 'li', count: 3
+        end
+      end
+
+      it "検索ワードを入れずに検索ボタンを押した場合、コスメ一覧が表示されること" do
+        fill_in 'q_name_or_makers_name_cont', with: ''
+        click_button '検索'
+        expect(page).to have_css 'h3', text: "コスメ一覧"
+        within find('.cosmes') do
+          expect(page).to have_css 'li', count: Cosme.count
+        end
+      end
+    end
+
+    context "ログインしていない場合" do
+      it "検索窓が表示されないこと" do
+        visit root_path
+        expect(page).not_to have_css 'form#cosme_search'
       end
     end
   end

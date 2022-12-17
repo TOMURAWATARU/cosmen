@@ -11,6 +11,7 @@ ja:
       cosme: コスメ
       comment: コメント
       log: 使ってみた感想
+      maker: メーカー
     attributes:
       user:
         id: ID
@@ -39,6 +40,10 @@ ja:
       log:
         cosme_id: 使ってみた感想をつけるコスメのID
         content: メモ
+      maker:
+        cosme_id: 紐づいたコスメのID
+        name: メーカー(複数可)
+        genre: ジャンル
   date:
     abbr_day_names:
     - 日
