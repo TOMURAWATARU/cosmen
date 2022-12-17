@@ -157,6 +157,10 @@ RSpec.describe "Users", type: :system do
           expect(page).to have_content cosme.description
           expect(page).to have_content cosme.user.name
           expect(page).to have_content cosme.popularity
+          cosme.makers.each do |i|
+            expect(page).to have_content i.name
+            expect(page).to have_content i.genre
+          end
         end
       end
 

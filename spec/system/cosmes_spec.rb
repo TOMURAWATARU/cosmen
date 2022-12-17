@@ -158,6 +158,10 @@ RSpec.describe "Cosmes", type: :system do
         expect(page).to have_content cosme.tips
         expect(page).to have_content cosme.reference
         expect(page).to have_content cosme.popularity
+        cosme.makers.each do |i|
+          expect(page).to have_content i.name
+          expect(page).to have_content i.genre
+        end
         expect(page).to have_link nil, href: cosme_path(cosme), class: 'cosme-picture'
       end
     end
