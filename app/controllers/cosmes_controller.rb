@@ -14,7 +14,7 @@ class CosmesController < ApplicationController
       format.html
       format.csv {
         send_data render_to_string,
-                  filename: "みんなのコスメ一覧_#{Time.current.strftime('%Y%m%d_%H%M')}.csv"
+                  filename: "みんなの投稿一覧_#{Time.current.strftime('%Y%m%d_%H%M')}.csv"
       }
     end
   end
