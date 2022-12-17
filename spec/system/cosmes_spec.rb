@@ -305,13 +305,13 @@ RSpec.describe "Cosmes", type: :system do
         create(:cosme, name: '美容液', user: other_user)
 
         # 誰もフォローしない場合
-        fill_in 'q_name_cont', with: 'ビタミン'
+        fill_in 'q_name_or_makers_name_cont', with: 'ビタミン'
         click_button '検索'
         expect(page).to have_css 'h3', text: "”ビタミン”の検索結果：1件"
         within find('.cosmes') do
           expect(page).to have_css 'li', count: 1
         end
-        fill_in 'q_name_cont', with: '液'
+        fill_in 'q_name_or_makers_name_cont', with: '液'
         click_button '検索'
         expect(page).to have_css 'h3', text: "”液”の検索結果：1件"
         within find('.cosmes') do
@@ -320,22 +320,31 @@ RSpec.describe "Cosmes", type: :system do
 
         # other_userをフォローする場合
         user.follow(other_user)
-        fill_in 'q_name_cont', with: 'ビタミン'
+        fill_in 'q_name_or_makers_name_cont', with: 'ビタミン'
         click_button '検索'
         expect(page).to have_css 'h3', text: "”ビタミン”の検索結果：2件"
         within find('.cosmes') do
           expect(page).to have_css 'li', count: 2
         end
-        fill_in 'q_name_cont', with: '液'
+        fill_in 'q_name_or_makers_name_cont', with: '液'
         click_button '検索'
         expect(page).to have_css 'h3', text: "”液”の検索結果：2件"
         within find('.cosmes') do
           expect(page).to have_css 'li', count: 2
         end
+
+        # メーカーも含めて検索に引っかかること
+        create(:maker, name: '株式会社ビタミン', cosme: Cosme.first)
+        fill_in 'q_name_or_makers_name_cont', with: 'ビタミン'
+        click_button '検索'
+        expect(page).to have_css 'h3', text: "”ビタミン”の検索結果：3件"
+        within find('.cosmes') do
+          expect(page).to have_css 'li', count: 3
+        end
       end
 
       it "検索ワードを入れずに検索ボタンを押した場合、コスメ一覧が表示されること" do
-        fill_in 'q_name_cont', with: ''
+        fill_in 'q_name_or_makers_name_cont', with: ''
         click_button '検索'
         expect(page).to have_css 'h3', text: "コスメ一覧"
         within find('.cosmes') do
