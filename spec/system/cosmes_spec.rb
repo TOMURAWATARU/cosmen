@@ -359,5 +359,27 @@ RSpec.describe "Cosmes", type: :system do
         expect(page).not_to have_css 'form#cosme_search'
       end
     end
+
+    describe "投稿一覧ページ" do
+      context "CSV出力機能" do
+        before do
+          login_for_system(user)
+        end
+    
+        it "トップページからCSV出力が行えること" do
+          visit root_path
+          click_link 'みんなの投稿をCSV出力'
+          expect(page.response_headers['Content-Disposition']).to \
+            include("みんなの投稿一覧_#{Time.current.strftime('%Y%m%d_%H%M')}.csv")
+        end
+    
+        it "プロフィールページからCSV出力が行えること" do
+          visit user_path(user)
+          click_link 'みんなの投稿をCSV出力'
+          expect(page.response_headers['Content-Disposition']).to \
+            include("みんなの投稿一覧_#{Time.current.strftime('%Y%m%d_%H%M')}.csv")
+        end
+      end
+    end
   end
 end

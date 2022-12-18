@@ -3,6 +3,7 @@ require "rails_helper"
 RSpec.describe "料理一覧ページ", type: :request do
   let!(:user) { create(:user) }
   let!(:cosme) { create(:cosme, user: user) }
+  let!(:cosme) { create(:cosme, :makers, user: user) }
 
   context "ログインしているユーザーの場合" do
     it "レスポンスが正常に表示されること" do
@@ -10,6 +11,12 @@ RSpec.describe "料理一覧ページ", type: :request do
       get cosmes_path
       expect(response).to have_http_status "200"
       expect(response).to render_template('cosmes/index')
+    end
+
+    it "CSV出力がエラーなく行えること" do
+      login_for_request(user)
+      get cosmes_path(format: :csv)
+      expect(response).to have_http_status "200"
     end
   end
 
