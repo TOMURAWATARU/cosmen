@@ -25,11 +25,16 @@
     <div class="col-md-9">
       <% if @user.cosmes.any? %>
         <h3>コスメ (<%= @user.cosmes.count %>)</h3>
-        <ol class="dishes">
+        <ol class="cosmes">
           <%= render @cosmes %>
         </ol>
         <%= will_paginate @cosmes %>
       <% end %>
+    </div>
+    <div class="col-md-3">
+      <p><%= link_to "新しいコスメを登録する", new_cosme_path, class: "btn btn-primary btn-lg btn-demo btn-record" %></p>
+      <br>
+      <p><%= link_to "みんなの投稿をCSV出力", cosmes_path(format: :csv), class: "btn btn-primary btn-lg btn-demo btn-csv" %></p>
     </div>
   </div>
 </div>
